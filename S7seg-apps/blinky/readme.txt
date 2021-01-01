@@ -1,0 +1,1 @@
+ql_symbiflow -compile -src . -d ql-eos-s3 -t helloworldfpga -v blinky.v -p pygmy.pcf -P PU64 -dump binary

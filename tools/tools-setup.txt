@@ -1,0 +1,71 @@
+# Be Root (sudo su on rpi32/arm7l, on Android, its always root)
+# Setup Tools (one Time on PC/RPI/Android Termux) and test built in examples before moving to qorc-sdk or pygmy-apps or your own design
+
+mkdir -p ~/symbiflow
+export  INSTALL_DIR=~/symbiflow
+
+curl $(curl https://storage.googleapis.com/symbiflow-arch-defs-install/latest) > ~/arch.tar.gz
+
+tar -C $INSTALL_DIR -xvf ~/arch.tar.gz
+
+export PATH="$INSTALL_DIR/quicklogic-arch-defs/bin:$INSTALL_DIR/quicklogic-arch-defs/bin/python:$PATH"
+
+#Install apt/python dependencies:
+#Python version should be 3.7 or 3.8.5 (esp on Android)
+#if 3.9 is there, then install and use 3.8.5
+
+# Install arm toolchain and hardware tools
+apt install build-essential libssl-dev libffi-dev python-dev bison flex git tcl-dev tcl-tclreadline libreadline-dev  autoconf libtool make automake texinfo pkg-config libusb-1.0-0 libusb-1.0-0-dev telnet python3 apt-utils libxslt-dev python3-lxml python3-simplejson cmake 
+
+#optional:iverilog gtkwave
+
+#Install Python libraries
+#pip3 install wheel python-constraint serial tinyfpgab
+
+#yosys, yosys-plugins,vtr-verilog-to-routing, qlfasm
+cd quicklogic-yosys
+make config-gcc
+make -j4 install PREFIX=$INSTALL_DIR
+cd -
+
+cd yosys-symbiflow-plugins
+export PATH=$INSTALL_DIR/bin:$PATH
+make -j4 install
+cd -
+
+cd vtr-verilog-to-routing
+make -j4
+cd -
+
+cp vtr-verilog-to-routing/build/vpr/vpr /root/tools/bin $INSTALL_DIR/bin
+cp vtr-verilog-to-routing/build/utils/fasm/genfasm $INSTALL_DIR/bin
+
+#Check the executables on Path
+vpr -h
+yosys -h
+qlfasm -h
+qlsymbiflow -h
+
+cd $INSTALL_DIR/quicklogic-arch-defs/tests/counter_16bit
+ql_symbiflow -compile -d ql-eos-s3 -P pd64 -v counter_16bit.v -t top -p chandalar.pcf 
+#top.bin must be generated successfully
+
+#GCC-Compilation for C SRC (ARM)
+
+##For RPI3/4 in 32 -bit mode (Raspbian generally):
+#Download and unzip:
+cd $INSTALL_DIR
+wget https://github.com/xpack-dev-tools/arm-none-eabi-gcc-xpack/releases/download/v9.3.1-1.1/xpack-arm-none-eabi-gcc-9.3.1-1.1-linux-arm.tar.gz 
+tar -xvzf  xpack-arm-none-eabi-gcc-9.3.1-1.1-linux-arm.tar.gz 
+export PATH=$INSTALL_DIR/xpack-arm-none-eabi-gcc-9.3.1-1.1/bin:$PATH
+
+##For RPI4 in 64 -bit mode (Ubuntu 20.04):
+##OR for Termux on Android (ubuntu 20.04 proot)#Download and unzip:
+cd $INSTALL_DIR
+wget https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2020q2/gcc-arm-none-eabi-9-2020-q2-update-aarch64-linux.tar.bz2
+tar -xvjf  gcc-arm-none-eabi-9-2020-q2-update-aarch64-linux.tar.bz2
+export PATH=$INSTALL_DIR/gcc-arm-none-eabi-9-2020-q2-update/bin:$PATH
+
+#Test the GNU RM GCC Embedded toolchain
+arm-none-eabi-gcc --version
+

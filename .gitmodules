@@ -1,0 +1,32 @@
+[submodule "tools/quicklogic-yosys"]
+	path = tools/quicklogic-yosys
+	url = https://github.com/QuickLogic-Corp/yosys.git
+	branch = quicklogic-rebased
+[submodule "tools/yosys-symbiflow-plugins"]
+	path = tools/yosys-symbiflow-plugins
+	url = https://github.com/QuickLogic-Corp/yosys-symbiflow-plugins
+	branch = ql-ios
+[submodule "tools/vtr-verilog-to-routing"]
+	path = tools/vtr-verilog-to-routing
+	url = https://github.com/SymbiFlow/vtr-verilog-to-routing
+	branch = master
+[submodule "tools/-f"]
+	path = tools/-f
+	url = https://github.com/QuickLogic-Corp/quicklogic-fasm
+	branch = master
+[submodule "tools/quicklogic-fasm"]
+	path = tools/quicklogic-fasm
+	url = https://github.com/QuickLogic-Corp/quicklogic-fasm
+	branch = master
+[submodule "tools/fasm-REF-ONLY/fasm"]
+	path = tools/fasm-REF-ONLY/fasm
+	url = git://github.com/symbiflow/fasm.git
+	branch = master
+[submodule "tools/fasm-REF-ONLY/quicklogic-fasm-utils"]
+	path = tools/fasm-REF-ONLY/quicklogic-fasm-utils
+	url = git://github.com/Quicklogic-Corp/quicklogic-fasm-utils.git
+	branch = master
+[submodule "onion-apps"]
+	path = onion-apps
+	url = https://github.com/coolbreeze413/qorc-onion-apps
+	branch = master
