@@ -30,3 +30,7 @@
 	path = onion-apps
 	url = https://github.com/coolbreeze413/qorc-onion-apps
 	branch = master
+[submodule "pygmy-sdk"]
+	path = pygmy-sdk
+	url = https://github.com/optimuslogic/qorc-sdk
+	branch = master
