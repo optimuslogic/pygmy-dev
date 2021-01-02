@@ -7,13 +7,16 @@ git clone --recursive https://github.com/optimuslogic/pygmy-dev
 ## Few FPGA examples are available in this folder for 7 segment and LED blink which can be compiled to bin.
 
 #Example 1:
+
 cd pygmy-dev/S7seg-apps/static-number
+
 ql_symbiflow -compile -src . -d ql-eos-s3 -t top -v blinky.v -p pygmy.pcf -P PU64 -dump binary
+
 #top.bin will be available in directory
 
-Reset Pygmy board and press ‘user button’ while blue LED is flashing.
+Reset Pygmy board and press â€˜user buttonâ€™ while blue LED is flashing.
 Should switch to mode where green LED is breathing.
-If green LED not breathing, press reset again and ‘user button’ within 5 seconds of releasing reset (while blue LED is still flashing)
+If green LED not breathing, press reset again and â€˜user buttonâ€™ within 5 seconds of releasing reset (while blue LED is still flashing)
 With green LED breathing, program fpga into Pygmy:
 
 
@@ -23,13 +26,16 @@ After programming has completed, reset the QuickFeather board and do not press t
 Blue LED should flash for 5 sec and then load the m4app and run it.
 
 #Example 2:
+
 cd pygmy-dev/S7seg-apps/blinky
+
 ql_symbiflow -compile -src . -d ql-eos-s3 -t helloworldfpga -v blinky.v -p pygmy.pcf -P PU64 -dump binary
+
 #helloworldfpga.bin will be available in directory
 
-Reset Pygmy board and press ‘user button’ while blue LED is flashing.
+Reset Pygmy board and press â€˜user buttonâ€™ while blue LED is flashing.
 Should switch to mode where green LED is breathing.
-If green LED not breathing, press reset again and ‘user button’ within 5 seconds of releasing reset (while blue LED is still flashing)
+If green LED not breathing, press reset again and â€˜user buttonâ€™ within 5 seconds of releasing reset (while blue LED is still flashing)
 With green LED breathing, program fpga into Pygmy:
 
 python3 <base-dir>/pygmy-sdk/TinyFPGA-Programmer-Application/tinyfpga-programmer-gui.py --port /dev/ttyACM0  --appfpga  helloworldfpga.bin --mode fpga
