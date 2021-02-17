@@ -10,10 +10,6 @@
 	path = tools/vtr-verilog-to-routing
 	url = https://github.com/SymbiFlow/vtr-verilog-to-routing
 	branch = master
-[submodule "tools/-f"]
-	path = tools/-f
-	url = https://github.com/QuickLogic-Corp/quicklogic-fasm
-	branch = master
 [submodule "tools/quicklogic-fasm"]
 	path = tools/quicklogic-fasm
 	url = https://github.com/QuickLogic-Corp/quicklogic-fasm

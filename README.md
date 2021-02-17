@@ -8,9 +8,9 @@ cd pygmy-dev
 
 Follow the readme in tools to setup the tools for Pygmy board to setup the tools (one time).
 
-Please refer to https://github.com/QuickLogic-Corp/TinyFPGA-Programmer-Application document, to install serial driver and FPGA programmer application.
+Please refer to [QuickLogic-Corp/TinyFPGA-Programmer-Application](https://github.com/QuickLogic-Corp/TinyFPGA-Programmer-Application) document, for installing serial drivers and the FPGA programmer application.
 
-The source code is within pygmy-sdk clone from qorc-sdk.
+The source code is within submodule `pygmy-sdk` (a fork of [QuickLogic-Corp/qorc-sdk](https://github.com/QuickLogic-Corp/qorc-sdk)).
 
 The SDK will mention about setup instructions of the Toolchain and utilties, which you need to IGNORE, as they are applicable to Linux x86-64 machines only. You can follow the instructions from  the "Baremetal Example" section of Readme.
 
