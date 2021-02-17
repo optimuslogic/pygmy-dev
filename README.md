@@ -6,7 +6,7 @@ git clone --recursive https://github.com/optimuslogic/pygmy-dev
 cd pygmy-dev
 ```
 
-Follow the readme in tools to setup the tools for Pygmy board to setup the tools (one time).
+Follow the guidelines to setup the tools for Pygmy board (one time).
 
 Please refer to [QuickLogic-Corp/TinyFPGA-Programmer-Application](https://github.com/QuickLogic-Corp/TinyFPGA-Programmer-Application) document, for installing serial drivers and the FPGA programmer application.
 
