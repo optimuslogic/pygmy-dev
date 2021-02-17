@@ -16,11 +16,11 @@ The SDK will mention about setup instructions of the Toolchain and utilties, whi
 
 ## Examples
 
-Few FPGA examples are available in this folder for 7 segment and LED blink which can be compiled to bin.
+Few FPGA examples are available in [pygmy-sdk/S7seg-apps/](pygmy-sdk/S7seg-apps) for 7 segment and LED blink. Those can be synthesized/compiled to bitstreams (bin files).
 
 ```sh
 # Example 1
-cd S7seg-apps/static-number
+cd static-number
 ql_symbiflow -compile -src . -d ql-eos-s3 \
   -t top \
   -v blinky.v \
@@ -30,7 +30,7 @@ ql_symbiflow -compile -src . -d ql-eos-s3 \
 
 ```sh
 # Example 2
-cd S7seg-apps/blinky
+cd blinky
 ql_symbiflow -compile -src . -d ql-eos-s3 \
   -t helloworldfpga \
   -v blinky.v \
