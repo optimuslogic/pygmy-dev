@@ -8,19 +8,19 @@ cd pygmy-dev
 
 Follow the readme in tools to setup the tools for Pygmy board to setup the tools (one time).
 
-Please refer to https://github.com/QuickLogic-Corp/TinyFPGA-Programmer-Application document, to install serial driver and FPGA programmer application.
+Please refer to [QuickLogic-Corp/TinyFPGA-Programmer-Application](https://github.com/QuickLogic-Corp/TinyFPGA-Programmer-Application) document, for installing serial drivers and the FPGA programmer application.
 
-The source code is within pygmy-sdk clone from qorc-sdk.
+The source code is within submodule `pygmy-sdk` (a fork of [QuickLogic-Corp/qorc-sdk](https://github.com/QuickLogic-Corp/qorc-sdk)).
 
 The SDK will mention about setup instructions of the Toolchain and utilties, which you need to IGNORE, as they are applicable to Linux x86-64 machines only. You can follow the instructions from  the "Baremetal Example" section of Readme.
 
 ## Examples
 
-Few FPGA examples are available in this folder for 7 segment and LED blink which can be compiled to bin.
+Few FPGA examples are available in [pygmy-sdk/S7seg-apps/](pygmy-sdk/S7seg-apps) for 7 segment and LED blink. Those can be synthesized/compiled to bitstreams (bin files).
 
 ```sh
 # Example 1
-cd S7seg-apps/static-number
+cd static-number
 ql_symbiflow -compile -src . -d ql-eos-s3 \
   -t top \
   -v blinky.v \
@@ -30,7 +30,7 @@ ql_symbiflow -compile -src . -d ql-eos-s3 \
 
 ```sh
 # Example 2
-cd S7seg-apps/blinky
+cd blinky
 ql_symbiflow -compile -src . -d ql-eos-s3 \
   -t helloworldfpga \
   -v blinky.v \
