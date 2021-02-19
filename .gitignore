@@ -50,7 +50,3 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
-
-S7seg-apps/blinky/Makefile.symbiflow
-S7seg-apps/blinky/build/
-S7seg-apps/blinky/helloworldfpga.bin
