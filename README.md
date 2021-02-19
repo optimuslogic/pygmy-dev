@@ -6,17 +6,15 @@ git clone --recursive https://github.com/optimuslogic/pygmy-dev
 cd pygmy-dev
 ```
 
-Follow the readme in tools to setup the tools for Pygmy board to setup the tools (one time).
+## Setup
 
-Please refer to [QuickLogic-Corp/TinyFPGA-Programmer-Application](https://github.com/QuickLogic-Corp/TinyFPGA-Programmer-Application) document, for installing serial drivers and the FPGA programmer application.
+Read the comments in [setup.sh](setup.sh) and execute it for setting up the tools for Pygmy board. Refer to [QuickLogic-Corp/TinyFPGA-Programmer-Application](https://github.com/QuickLogic-Corp/TinyFPGA-Programmer-Application) document, for installing serial drivers and the FPGA programmer application.
 
-The source code is within submodule `pygmy-sdk` (a fork of [QuickLogic-Corp/qorc-sdk](https://github.com/QuickLogic-Corp/qorc-sdk)).
-
-The SDK will mention about setup instructions of the Toolchain and utilties, which you need to IGNORE, as they are applicable to Linux x86-64 machines only. You can follow the instructions from  the "Baremetal Example" section of Readme.
+The SDK will mention about setup instructions of the Toolchain and utilties, which you need to IGNORE, as they are applicable to Linux x86-64 machines only. You can follow the instructions from the "Baremetal Example" section of Readme.
 
 ## Examples
 
-Few FPGA examples are available in [pygmy-sdk/S7seg-apps/](pygmy-sdk/S7seg-apps) for 7 segment and LED blink. Those can be synthesized/compiled to bitstreams (bin files).
+The source code is within submodule [`pygmy-sdk`](pygmy-sdk) (a fork of [QuickLogic-Corp/qorc-sdk](https://github.com/QuickLogic-Corp/qorc-sdk)). Examples are available in [pygmy-sdk/S7seg-apps/](pygmy-sdk/S7seg-apps) for 7 segment and LED blink. Those can be synthesized/compiled to bitstreams (bin files).
 
 ```sh
 # Example 1
