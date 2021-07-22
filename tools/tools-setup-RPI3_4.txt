@@ -6,7 +6,7 @@ mkdir -p ~/symbiflow
 export  INSTALL_DIR=~/symbiflow
 
 #Latet defs are here curl $(curl https://storage.googleapis.com/symbiflow-arch-defs-install/latest) > ~/arch.tar.gz
-# However Use the arch.tar.gz in this tools directory
+# However Use the arch.tar.gz from https://drive.google.com/file/d/17gVGRJ1qcaWanYzyg1eMUiLlFqya3_ZD
 
 tar -C $INSTALL_DIR -xvf ~/pygmy-dev/tools/arch.tar.gz
 
