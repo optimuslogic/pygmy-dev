@@ -1,12 +1,14 @@
-# Be Root (sudo su on rpi32/arm7l, on Android, its always root)
-# Setup Tools (one Time on PC/RPI/Android Termux) and test built in examples before moving to qorc-sdk or pygmy-apps or your own design
+#This file explains the setup of Symbiflow tools on RPI3 and RPI4. Android-Termux is in another document
+# Be Root (sudo su on rpi32/arm7l)
+# Setup Tools (one Time on PC/RPI) and test built in examples before moving to qorc-sdk or pygmy-apps or your own design
 
 mkdir -p ~/symbiflow
 export  INSTALL_DIR=~/symbiflow
 
-curl $(curl https://storage.googleapis.com/symbiflow-arch-defs-install/latest) > ~/arch.tar.gz
+#Latet defs are here curl $(curl https://storage.googleapis.com/symbiflow-arch-defs-install/latest) > ~/arch.tar.gz
+# However Use the arch.tar.gz in this tools directory
 
-tar -C $INSTALL_DIR -xvf ~/arch.tar.gz
+tar -C $INSTALL_DIR -xvf ~/pygmy-dev/tools/arch.tar.gz
 
 export PATH="$INSTALL_DIR/quicklogic-arch-defs/bin:$INSTALL_DIR/quicklogic-arch-defs/bin/python:$PATH"
 
@@ -60,7 +62,6 @@ tar -xvzf  xpack-arm-none-eabi-gcc-9.3.1-1.1-linux-arm.tar.gz
 export PATH=$INSTALL_DIR/xpack-arm-none-eabi-gcc-9.3.1-1.1/bin:$PATH
 
 ##For RPI4 in 64 -bit mode (Ubuntu 20.04):
-##OR for Termux on Android (ubuntu 20.04 proot)#Download and unzip:
 cd $INSTALL_DIR
 wget https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2020q2/gcc-arm-none-eabi-9-2020-q2-update-aarch64-linux.tar.bz2
 tar -xvjf  gcc-arm-none-eabi-9-2020-q2-update-aarch64-linux.tar.bz2
