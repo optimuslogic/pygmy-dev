@@ -1,0 +1,297 @@
+#------------------Install Termux on your Android Phone----------------------------
+#Attach a USB keyboard with Hub or Bluetooth to your mobile or use onscreen keyboard
+#Do remote display, Mirror or even scrcpy on PC to see output on big screen
+#Buy miracast or chromecast or slimport adaptor
+
+#-----------------------All of these instructions need to be done only once----------
+#If you have older version of Termux from PlayStore, then that needs to be removed and the new one from f-droid to be installed
+# Please note the data in old Termux will be deleted if you do so, so please backup your Termux data first for later use
+#if you want by following https://wiki.termux.com/wiki/Backing_up_Termux
+#You should not mix this backup or restore in the f-droid termux
+
+#Install fdroid apk from
+https://www.f-droid.org/
+
+#Open fdroid on your mobile and install termux from it
+#Give termux access to your  user directory in android
+termux-setup-storage
+
+#Upgrade packages
+apt update && apt upgrade
+apt install build-essential
+
+#Mandatory packages
+apt install git silversearcher-ag wget openssh subversion imagemagick proot nano python  mutt nmap
+#------------------End Install Termux----------------------------
+
+#------------------ Installing ubuntu on termux----------------------------
+apt install proot-distro
+
+#Install ubuntu
+proot-distro install ubuntu-20.04
+proot-distro login ubuntu-20.04
+#One-time update of Linux
+apt update && apt upgrade
+#Give termux access to your  user directory in android
+termux-setup-storage 
+#------------------ End Installing ubuntu on termux----------------------------
+
+#------------------ Setup Pygmy Dev -----------------------------------
+# Be root
+cd ~ 
+
+#Create directory for building the toolchain
+mkdir -p ~/symbiflow
+export INSTALL_DIR=~/symbiflow
+
+#Download and extract symbiflow OR copy from another source
+# Latest: curl $(curl https://storage.googleapis.com/symbiflow-arch-defs-install/latest) > ~/arch.tar.gz
+# But Get the arch.tar.gz from https://drive.google.com/file/d/17gVGRJ1qcaWanYzyg1eMUiLlFqya3_ZD to ~/arch.tar.gz
+tar -C $INSTALL_DIR -xvf ~/arch.tar.gz
+export PATH="$INSTALL_DIR/bin:$INSTALL_DIR/quicklogic-arch-defs/bin:$INSTALL_DIR/quicklogic-arch-defs/bin/python:$PATH"
+
+#install all packages
+#when prompted for Geographical Area, select Asia (6), then select Kolkata
+apt install build-essential libssl-dev libffi-dev python-dev bison flex git tcl-dev tcl-tclreadline libreadline-dev  autoconf libtool make automake texinfo pkg-config libusb-1.0-0 libusb-1.0-0-dev telnet python3 apt-utils libxslt-dev python3-lxml python3-simplejson cmake
+
+# This will get the Pygmy repo to local
+cd ~
+git clone --recursive https://github.com/optimuslogic/pygmy-dev
+
+#Compile yosys
+cd ~/pygmy-dev/tools/quicklogic-yosys/
+make config-gcc
+make -j4 install PREFIX=$INSTALL_DIR
+cd ~
+
+#Compile yosys-plugins
+cd ~/pygmy-dev/tools/yosys-symbiflow-plugins/
+export PATH=$INSTALL_DIR/bin:$PATH
+make -j4 install
+cd ~
+
+#Compile VTR
+cd ~/pygmy-dev/tools/vtr-verilog-to-routing/
+make -j4
+cd ~
+
+#Copy VTR to symbiflow
+cp ~/pygmy-dev/tools/vtr-verilog-to-routing/build/vpr/vpr $INSTALL_DIR/bin
+cp ~/pygmy-dev/tools/vtr-verilog-to-routing/build/utils/fasm/genfasm $INSTALL_DIR/bin
+
+#Check the tools
+vpr -h
+yosys -h
+genfasm -h
+
+cd ~/pygmy-dev/tools/cd quicklogic-fasm/
+pip3 install -r requirements.txt 
+python3 setup.py install
+cd ~
+
+#Check the tools
+qlfasm -h
+ql_symbiflow -h
+
+#Test FPGA compilation which uses the tools
+cd $INSTALL_DIR/quicklogic-arch-defs/tests/counter_16bit
+ql_symbiflow -compile -d ql-eos-s3 -P pd64 -v counter_16bit.v -t top -p chandalar.pcf
+
+cd ~/pygmy-dev/pygmy-sdk/S7seg-apps/static-number/
+ql_symbiflow -compile -src . -d ql-eos-s3 -t top -v seg7_static.v -p pygmy.pcf -P PU64 -dump binary
+
+#Setup ARM M4 Tools
+cd $INSTALL_DIR
+wget https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2020q2/gcc-arm-none-eabi-9-2020-q2-update-aarch64-linux.tar.bz2
+tar -xvjf  gcc-arm-none-eabi-9-2020-q2-update-aarch64-linux.tar.bz2
+export PATH=$INSTALL_DIR/gcc-arm-none-eabi-9-2020-q2-update/bin:$PATH
+cd ~
+
+#Test ARM gcc
+arm-none-eabi-gcc --version
+
+#Test SW & FPGA code
+cd ~/pygmy-dev/pygmy-sdk/qf_apps/qf_helloworldsw/GCC_Project/
+make
+cd ~/pygmy-dev/pygmy-sdk/qf_apps/qf_helloworldhw/GCC_Project/
+make
+
+#Add the following ~/.bash_profile so that you can setup the env variables next time
+#Then the tools will work automatically
+export INSTALL_DIR=~/symbiflow
+export PATH="$INSTALL_DIR/bin:$INSTALL_DIR/quicklogic-arch-defs/bin:$INSTALL_DIR/quicklogic-arch-defs/bin/python:$PATH"
+export PATH=$INSTALL_DIR/gcc-arm-none-eabi-9-2020-q2-update/bin:$PATH
+
+#-----------------------------------End Setup PygmyDev-------------------------------
+
+
+###FOr Pygmy BB0, there is Nordic nRF52 on board, which can also be programmed from Termux, as well used to load pygmy code over bluetooth:
+
+#----------------------------------Setup nRF52 SDK 16.0.0----------------------------
+#Download SDK 16.0.0 from Browser from https://www.nordicsemi.com/Products/Development-software/nRF5-SDK/Download#infotabs
+# Typically DeviceDownload.zip will be downloaded in Download directory
+cd ~
+ls -al /sdcard/Download/DeviceDownload.zip
+mkdir $INSTALL_DIR/nRF5SDK160098a08e2
+cd $INSTALL_DIR/nRF5SDK160098a08e2
+unzip /sdcard/Download/DeviceDownload.zip
+unzip $INSTALL_DIR/nRF5SDK160098a08e2/nRF5SDK160098a08e2.zip
+
+#edit the Makefile nRF52 to put path of ARM GCC chain on  Line 1 & 2 in SDK 16.0.0
+#GNU_INSTALL_ROOT ?= $INSTALL_DIR/gcc-arm-none-eabi-9-2020-q2-update/bin/
+#GNU_VERSION ?= 9.3.1
+nano $INSTALL_DIR/nRF5SDK160098a08e2/components/toolchain/gcc/Makefile.posix
+
+#Compile Examples to check
+cd $INSTALL_DIR/nRF5SDK160098a08e2/examples/ble_peripheral/ble_app_uart/pca10040/s132/armgcc
+make
+
+# Install Micro-ECC for DFU upates
+#micro-ecc is an open source library that is required to use the cryptography library. When using micro-ecc, you must ensure compliance with the license of the library as stated in the LICENSE.txt file that is included in micro-ecc.
+#The cryptography library expects to find the compiled micro-ecc library in InstallFolder\external\micro-ecc\micro-ecc.
+#Clone the micro-ecc GitHub repository https://github.com/kmackay/micro-ecc into InstallFolder\external\micro-ecc\micro-ecc.
+#Ideally Nordic wants ARM GCC 4.9-2015-q3-update to compile MicroECC, but we will use 9.3.1
+
+cd $INSTALL_DIR/nRF5SDK160098a08e2/external/micro-ecc
+git clone https://github.com/kmackay/micro-ecc
+#For nrf52 we will use HardFloat
+cd $INSTALL_DIR/nRF5SDK160098a08e2/external/micro-ecc/nrf52hf_armgcc/armgcc
+make
+
+#Try Bootloader compilation
+cd $INSTALL_DIR/nRF5SDK160098a08e2/examples/dfu/secure_bootloader_private_key/pca10040_s132_ble_debug/armgcc
+make
+
+# Now you can do Nordic development on Termux as well
+
+#---------------------------------End Setup nRF52 SDK 16.0.0-------------------------
+
+#----------------------------------Setup nrfutil 6.1.0 for DFU zip-----------------------
+#By instaling nrfutil on Termux, we can generate the DFU zip file to update the Board
+#DFU bootloader must be flashed on Board with wired connection as Android doesnt allow this
+#After generating the DFU zip, we can use nRFConnect App in Android to send the DFu zip file
+
+#Install nrfutil 6.1.0 directly (may not work on all mobile/termux)
+python3 -m pip install nrfutil==6.1.0
+
+#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#If no error, then installation of nrfutil is complete:
+#nrfutil version must show 6.1.0
+nrfutil version
+
+#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#If Error, then we need to install nrfutil and its dependencies from  source :
+#First remove any nrfutil
+python3 -m pip uninstall nrfutil==6.1.0
+#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+#Install pre-requisites for nrfutil 6.1.0
+
+cd $INSTALL_DIR
+cmake --version
+python3 -m pip install ninja
+ninja
+
+#vcpkg
+git clone https://github.com/Microsoft/vcpkg.git
+cd $INSTALL_DIR/vcpkg/downloads/tools/cmake-3.14.0-linux/cmake-3.14.0-Linux-x86_64/bin
+mv cmake cmake86
+cd $INSTALL_DIR/vcpkg/
+#Edit this script around  line 222, near #Preparation, edit the else part
+# Comment    fetchTool "cmake" "$UNAME" cmakeExe || exit 1
+# comment    fetchTool "ninja" "$UNAME" ninjaExe || exit 1
+# Insert   cmakeExe="cmake"
+# Insert   ninjExe="ninja"
+nano $INSTALL_DIR/vcpkg/scripts/bootstrap.sh 
+#Now build vcpkg
+./bootstrap-vcpkg.sh --useSystemBinaries
+
+export VCPKG_ROOT=$INSTALL_DIR/vcpkg
+vcpkg
+
+#install vcpkg libs
+vcpkg install asio catch2 spdlog
+export ASIO_INCLUDE_DIR=$INSTALL_DIR/vcpkg/packages/asio_x64-linux/include/
+export spdlog_DIR=$INSTALL_DIR/vcpkg/packages/spdlog_x64-linux/share/spdlog/
+export fmt_DIR=$INSTALL_DIR/vcpkg/packages/fmt_x64-linux/share/fmt/
+export Catch2_DIR=$INSTALL_DIR/vcpkg/packages/catch2_x64-linux/share/catch2/
+
+#get pc-ble-driver for nrfutil
+cd $INSTALL_DIR
+git clone https://github.com/NordicSemiconductor/pc-ble-driver.git
+cd $INSTALL_DIR/pc-ble-driver/
+#Edit this cmakelist.txt around line 213
+#comment the line find_path(ASIO_INCLUDE_DIR asio.hpp)
+#add set(ASIO_INCLUDE_DIR "$INSTALL_DIR/vcpkg/packages/asio_x64-linux/include/")
+nano CMakeLists.txt
+
+mkdir build && cd build
+cmake     -G Ninja     ..
+
+python3 -m pip install pyinstaller
+cd $INSTALL_DIR
+wget https://github.com/NordicSemiconductor/pc-nrfutil/releases/download/v6.1/nrfutil-6.1.0.tar.gz
+tar -xvf nrfutil-6.1.0.tar.gz 
+cd $INSTALL_DIR/nrfutil-6.1.0/
+python3 -m pip install -r requirements.txt 
+python3 setup.py install
+python3 -m pip show nrfutil
+#nrfutil version must show 6.1.0
+nrfutil version
+
+#----------------------------------End Setup nrfutil 6.1.0 for DFU-----------------------
+
+#----------------------------------Check nrfutil 6.1.0, Keys, DFU SDK16.0.0-----------------------
+#You need to create own keys for the product, convert to .c and use in the examples
+#Refer https://infocenter.nordicsemi.com/index.jsp?topic=%2Fcom.nordic.infocenter.sdk5.v15.0.0%2Flib_bootloader_dfu_keys.html
+#The public key for the examples is $INSTALL_DIR/nRF5SDK160098a08e2/examples/dfu/dfu_public_key.c
+#The private key .pem is used for DFU zip generation
+
+cd $INSTALL_DIR/nRF5SDK160098a08e2/examples/dfu/secure_bootloader_private_key
+nrfutil keys generate a.pem
+#This C array of public key goes to $INSTALL_DIR/nRF5SDK160098a08e2/examples/dfu/dfu_public_key.c and then re-compile boot loader
+nrfutil keys display --key pk --format code a.pem
+
+#Compile Target Application (example)
+cd $INSTALL_DIR/nRF5SDK160098a08e2/examples/ble_peripheral/ble_app_uart/pca10040/s132/armgcc
+make
+
+#Try DFU compilation
+cd $INSTALL_DIR/nRF5SDK160098a08e2/examples/dfu/secure_bootloader_private_key/pca10040_s132_ble_debug/armgcc
+make
+
+#generate DFU package, use private key .pem file and the application binary
+nrfutil pkg generate --hw-version 52 --application-version 1 --application ../../ble_peripheral/ble_app_uart/pca10040/s132/armgcc/_build/nrf52832_xxaa.hex --sd-req 0xCB --key-file ./a.pem ../../../../../../test_dfu.zip
+#If Error in generation, then nrfutil is wrong, please retry the nrfutil installation from source
+#----------------------------------END Check nrfutil 6.1.0, Keys, DFU SDK16.0.0-----------------------
+
+#----------------------------------Install VS Code in Termux----------------------------
+# Its a good idea to have a IDE like VSCode running on your Phone to edit code
+# Open another terminal on Termux (swipe right on left edge or google)
+# vscode runs a server on command line in Termux termina;, so that terminal cant be used
+# The vscode frontend opens in Chrome Browser
+
+# Download code-server (One-time)
+cd $INSTALL_DIR
+wget https://github.com/cdr/code-server/releases/download/v3.10.2/code-server_3.10.2_arm64.deb
+
+#Install code-server (One-Time)
+dpkg -i code-server_3.10.2_arm64.deb
+
+#Run code-server (Whenever you want to run)
+cd $PREFIX/../home/
+#Create password for vscode & run 
+
+export PASSWORD="test123"
+code-server
+#This terminal will remain open
+
+#In your browser, open
+http://127.0.0.1:8080
+
+#and enter the password "test123"
+#VSCode environment will open
+
+#----------------------------------End Install VS Code in Termux----------------------------
+
+#------------------------------INSTALLATION COMPLETE-------------------------------
