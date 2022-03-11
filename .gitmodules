@@ -29,4 +29,4 @@
 [submodule "pygmy-sdk"]
 	path = pygmy-sdk
 	url = https://github.com/optimuslogic/qorc-sdk
-	branch = master
+	branch = pygmy-dev
