@@ -16,7 +16,7 @@
 	branch = master
 [submodule "tools/fasm-REF-ONLY/fasm"]
 	path = tools/fasm-REF-ONLY/fasm
-	url = git://github.com/symbiflow/fasm.git
+	url = https://github.com/symbiflow/fasm.git
 	branch = master
 [submodule "tools/fasm-REF-ONLY/quicklogic-fasm-utils"]
 	path = tools/fasm-REF-ONLY/quicklogic-fasm-utils
