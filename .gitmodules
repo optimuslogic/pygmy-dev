@@ -20,7 +20,7 @@
 	branch = master
 [submodule "tools/fasm-REF-ONLY/quicklogic-fasm-utils"]
 	path = tools/fasm-REF-ONLY/quicklogic-fasm-utils
-	url = git://github.com/Quicklogic-Corp/quicklogic-fasm-utils.git
+	url = https://github.com/Quicklogic-Corp/quicklogic-fasm-utils.git
 	branch = master
 [submodule "onion-apps"]
 	path = onion-apps
