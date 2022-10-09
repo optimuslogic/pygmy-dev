@@ -4,8 +4,8 @@
 	branch = quicklogic-rebased
 [submodule "tools/yosys-symbiflow-plugins"]
 	path = tools/yosys-symbiflow-plugins
-	url = https://github.com/QuickLogic-Corp/yosys-symbiflow-plugins
-	branch = ql-ios
+	url = https://github.com/optimuslogic/yosys-symbiflow-plugins
+	branch = qorc-eoss3-branch
 [submodule "tools/vtr-verilog-to-routing"]
 	path = tools/vtr-verilog-to-routing
 	url = https://github.com/SymbiFlow/vtr-verilog-to-routing
